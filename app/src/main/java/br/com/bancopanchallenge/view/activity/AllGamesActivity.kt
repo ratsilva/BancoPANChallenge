@@ -3,13 +3,11 @@ package br.com.bancopanchallenge.view.activity
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.bancopanchallenge.R
@@ -17,10 +15,7 @@ import br.com.bancopanchallenge.databinding.ActivityAllGamesBinding
 import br.com.bancopanchallenge.view.adapter.AllGamesAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.bancopanchallenge.model.Game
-import br.com.bancopanchallenge.model.retrofit.Status
 import br.com.bancopanchallenge.viewmodel.AllGamesViewModel
-import de.keyboardsurfer.android.widget.crouton.Crouton
-import de.keyboardsurfer.android.widget.crouton.Style
 
 class AllGamesActivity : AppCompatActivity() {
 
@@ -28,6 +23,8 @@ class AllGamesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAllGamesBinding
 
     private val adapter = AllGamesAdapter()
+
+    private var network: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,10 +91,11 @@ class AllGamesActivity : AppCompatActivity() {
             if(!status){
                 Toast.makeText(applicationContext, R.string.no_internet, Toast.LENGTH_SHORT).show()
             }
+            network = status
         })
 
         viewModel.getLoadingStatus().observe(this, Observer<Boolean> { status ->
-            if(status){
+            if(status && network){
                 binding.allgamesProgressbar.visibility = View.VISIBLE
             }else{
                 binding.allgamesProgressbar.visibility = View.GONE

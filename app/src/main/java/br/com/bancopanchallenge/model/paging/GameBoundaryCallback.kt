@@ -24,6 +24,10 @@ class GameBoundaryCallback(private val db: RoomRepository) :
 
     private val LoadingState: MutableLiveData<Boolean> = MutableLiveData()
 
+    init {
+        LoadingState.postValue(false)
+    }
+
     override fun onZeroItemsLoaded() {
         super.onZeroItemsLoaded()
 
@@ -71,6 +75,7 @@ class GameBoundaryCallback(private val db: RoomRepository) :
                     }
                 })
         }
+
     }
 
     override fun onItemAtEndLoaded(itemAtEnd: Game) {
@@ -119,6 +124,7 @@ class GameBoundaryCallback(private val db: RoomRepository) :
                     }
                 })
         }
+
     }
 
     fun getLoadingStatus() = LoadingState

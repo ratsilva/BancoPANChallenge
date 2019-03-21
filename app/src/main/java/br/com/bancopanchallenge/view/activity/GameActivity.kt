@@ -3,10 +3,7 @@ package br.com.bancopanchallenge.view.activity
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.util.Log
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.BindingAdapter
 import br.com.bancopanchallenge.R
 import br.com.bancopanchallenge.databinding.ActivityGameBinding
 import br.com.bancopanchallenge.model.Game

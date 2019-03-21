@@ -8,7 +8,6 @@ import br.com.bancopanchallenge.model.Game
 import androidx.paging.PagedList
 import br.com.bancopanchallenge.app.BancoPANApplication
 import br.com.bancopanchallenge.model.paging.GameBoundaryCallback
-import br.com.bancopanchallenge.model.retrofit.RetrofitRepository
 import br.com.bancopanchallenge.model.room.RoomRepository
 
 
