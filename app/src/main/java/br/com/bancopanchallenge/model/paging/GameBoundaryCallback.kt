@@ -1,6 +1,7 @@
 package br.com.bancopanchallenge.model.paging
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import br.com.bancopanchallenge.model.Game
 import br.com.bancopanchallenge.model.retrofit.ResponseGson
@@ -21,15 +22,19 @@ class GameBoundaryCallback(private val db: RoomRepository) :
     private val executor = Executors.newSingleThreadExecutor()
     private val helper = PagingRequestHelper(executor)
 
+    private val LoadingState: MutableLiveData<Boolean> = MutableLiveData()
+
     override fun onZeroItemsLoaded() {
         super.onZeroItemsLoaded()
 
-        helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) { helperCallback ->
+        LoadingState.postValue(true)
+
+        helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) { helperCallback ->
             api.getTopGames(clientId = CLIENTE_ID, offset = 0)
                 .enqueue(object : Callback<ResponseGson> {
 
                     override fun onFailure(call: Call<ResponseGson>?, t: Throwable) {
-                        Log.e("RedditBoundaryCallback", "Failed to load data!")
+                        Log.e("GameBoundaryCallback", "Failed to load data!")
                         helperCallback.recordFailure(t)
                     }
 
@@ -58,8 +63,10 @@ class GameBoundaryCallback(private val db: RoomRepository) :
                         }
 
                         executor.execute {
+                            db.deleteAllGames()
                             db.insertAllGames(listGames)
                             helperCallback.recordSuccess()
+                            LoadingState.postValue(false)
                         }
                     }
                 })
@@ -69,14 +76,14 @@ class GameBoundaryCallback(private val db: RoomRepository) :
     override fun onItemAtEndLoaded(itemAtEnd: Game) {
         super.onItemAtEndLoaded(itemAtEnd)
 
-        if(itemAtEnd.offset >= 100){return}
+        LoadingState.postValue(true)
 
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) { helperCallback ->
-            api.getTopGames(clientId = CLIENTE_ID, offset = (itemAtEnd.offset+10))
+            api.getTopGames(clientId = CLIENTE_ID, offset = (itemAtEnd.offset + 10))
                 .enqueue(object : Callback<ResponseGson> {
 
                     override fun onFailure(call: Call<ResponseGson>?, t: Throwable) {
-                        Log.e("RedditBoundaryCallback", "Failed to load data!")
+                        Log.e("GameBoundaryCallback", "Failed to load data!")
                         helperCallback.recordFailure(t)
                     }
 
@@ -98,7 +105,7 @@ class GameBoundaryCallback(private val db: RoomRepository) :
                                     rp.channels,
                                     rp.game!!.localized_name!!,
                                     rp.game!!.box!!.get("large")!!,
-                                    itemAtEnd.offset+10
+                                    itemAtEnd.offset + 10
                                 )
                                 listGames.add(game)
                             }
@@ -107,9 +114,12 @@ class GameBoundaryCallback(private val db: RoomRepository) :
                         executor.execute {
                             db.insertAllGames(listGames)
                             helperCallback.recordSuccess()
+                            LoadingState.postValue(false)
                         }
                     }
                 })
         }
     }
+
+    fun getLoadingStatus() = LoadingState
 }

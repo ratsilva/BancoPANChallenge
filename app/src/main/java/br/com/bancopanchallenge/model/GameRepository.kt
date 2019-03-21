@@ -8,5 +8,4 @@ interface GameRepository {
     fun getAllGames(): DataSource.Factory<Int, Game>
     fun insertAllGames(listGames: List<Game>)
     fun deleteAllGames()
-    fun getQtdGames(): Int
 }

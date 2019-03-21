@@ -12,8 +12,6 @@ import br.com.bancopanchallenge.databinding.ActivityGameBinding
 import br.com.bancopanchallenge.model.Game
 import br.com.bancopanchallenge.viewmodel.GameViewModel
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.list_item_game.view.*
 
 class GameActivity : AppCompatActivity(){
 

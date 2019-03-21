@@ -58,6 +58,7 @@ class AllGamesAdapter : PagedListAdapter<Game, AllGamesAdapter.GameViewHolder>(G
             return oldItem.viewers == newItem.viewers
                     && oldItem.channels == newItem.channels
                     && oldItem.logo == newItem.logo
+                    && oldItem.offset == newItem.offset
         }
     }
 }

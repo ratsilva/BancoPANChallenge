@@ -3,7 +3,9 @@ package br.com.bancopanchallenge.view.activity
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
@@ -15,7 +17,10 @@ import br.com.bancopanchallenge.databinding.ActivityAllGamesBinding
 import br.com.bancopanchallenge.view.adapter.AllGamesAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.bancopanchallenge.model.Game
+import br.com.bancopanchallenge.model.retrofit.Status
 import br.com.bancopanchallenge.viewmodel.AllGamesViewModel
+import de.keyboardsurfer.android.widget.crouton.Crouton
+import de.keyboardsurfer.android.widget.crouton.Style
 
 class AllGamesActivity : AppCompatActivity() {
 
@@ -66,11 +71,8 @@ class AllGamesActivity : AppCompatActivity() {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.orientation = RecyclerView.VERTICAL
 
-        val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-
         binding.allgamesRecyclerview.layoutManager = gridLayoutManager
         binding.allgamesRecyclerview.adapter = adapter
-        binding.allgamesRecyclerview.addItemDecoration(decoration)
 
     }
 
@@ -87,6 +89,21 @@ class AllGamesActivity : AppCompatActivity() {
         viewModel.getAllGames().observe(this, Observer<PagedList<Game>> { pagedList ->
             adapter.submitList(pagedList)
         })
+
+        viewModel.getNetworkStatus().observe(this, Observer<Boolean> { status ->
+            if(!status){
+                Toast.makeText(applicationContext, R.string.no_internet, Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        viewModel.getLoadingStatus().observe(this, Observer<Boolean> { status ->
+            if(status){
+                binding.allgamesProgressbar.visibility = View.VISIBLE
+            }else{
+                binding.allgamesProgressbar.visibility = View.GONE
+            }
+        })
+
 
     }
 

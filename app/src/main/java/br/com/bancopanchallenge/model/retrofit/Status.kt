@@ -2,7 +2,11 @@ package br.com.bancopanchallenge.model.retrofit
 
 import androidx.annotation.NonNull
 
-enum class Status {
-    @NonNull
-    LOADING, FAIL, SUCCESS
+class Status(var status: FetchStatus, var msg: String) {
+
+    enum class FetchStatus{
+        @NonNull
+        LOADING, FAIL, SUCCESS
+    }
+
 }

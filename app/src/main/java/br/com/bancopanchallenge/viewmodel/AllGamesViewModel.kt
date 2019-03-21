@@ -1,34 +1,48 @@
 package br.com.bancopanchallenge.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import br.com.bancopanchallenge.model.Game
 import androidx.paging.PagedList
+import br.com.bancopanchallenge.app.BancoPANApplication
 import br.com.bancopanchallenge.model.paging.GameBoundaryCallback
+import br.com.bancopanchallenge.model.retrofit.RetrofitRepository
 import br.com.bancopanchallenge.model.room.RoomRepository
 
 
 class AllGamesViewModel : ViewModel() {
 
-    val databaseRepository = RoomRepository()
+    val roomRepository = RoomRepository()
+
+    private val networkState: MutableLiveData<Boolean> = MutableLiveData()
 
     private var liveData: LiveData<PagedList<Game>>
 
-    private val config: PagedList.Config
-    private val livePageListBuilder: LivePagedListBuilder<Int, Game>
+    private var config: PagedList.Config
+    private var livePageListBuilder: LivePagedListBuilder<Int, Game>
+    private var bcb: GameBoundaryCallback
 
     init {
+
+        networkState.postValue(checkInternetConnection())
 
         config = PagedList.Config.Builder()
             .setPageSize(10)
             .setEnablePlaceholders(false)
             .build()
 
-        livePageListBuilder = LivePagedListBuilder<Int, Game>(databaseRepository.getAllGames(), config)
-        livePageListBuilder.setBoundaryCallback(GameBoundaryCallback(databaseRepository))
+        bcb = GameBoundaryCallback(roomRepository)
+
+        livePageListBuilder = LivePagedListBuilder<Int, Game>(
+            roomRepository.getAllGames(),
+            config)
+
+        livePageListBuilder.setBoundaryCallback(bcb)
 
         liveData = livePageListBuilder.build()
+
 
     }
 
@@ -36,30 +50,28 @@ class AllGamesViewModel : ViewModel() {
         return liveData
     }
 
+    fun getNetworkStatus(): LiveData<Boolean>{
+        return networkState
+    }
+
+    fun getLoadingStatus(): LiveData<Boolean>{
+        return bcb.getLoadingStatus()
+    }
+
     fun refreshAllGames(){
-        liveData = livePageListBuilder.build()
+
+        networkState.postValue(checkInternetConnection())
+
+        if(checkInternetConnection()){
+            roomRepository.deleteAllGames()
+            bcb.onZeroItemsLoaded()
+        }
     }
 
-    /*
-    fun getAllGames(): LiveData<List<Game>>{
-        return repository.getAllGamesDB()
+    fun checkInternetConnection(): Boolean{
+        return BancoPANApplication.isInternetOn()
     }
 
-    fun getStatusAPI(): LiveData<Status>{
-        return repository.getStatusAPI()
-    }
-
-    fun getAllGamesAPI(){
-        offsetGames = 0
-        repository.getAllGamesAPI(offsetGames)
-        offsetGames += 10
-    }
-
-    fun getNextGamesAPI(){
-        repository.getAllGamesAPI(offsetGames)
-        offsetGames += 10
-    }
-    */
 
 
 }

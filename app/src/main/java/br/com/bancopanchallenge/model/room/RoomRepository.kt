@@ -19,10 +19,6 @@ class RoomRepository : GameRepository{
     return gameDao.getAllGames()
   }
 
-  override fun getQtdGames(): Int {
-    return gameDao.getQtdGames()
-  }
-
   override fun insertAllGames(listGames: List<Game>) {
     InsertAsyncTask(gameDao).execute(listGames)
   }

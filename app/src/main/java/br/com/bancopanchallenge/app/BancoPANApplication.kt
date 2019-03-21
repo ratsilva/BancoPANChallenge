@@ -3,24 +3,31 @@ package br.com.bancopanchallenge.app
 import android.app.Application
 import androidx.room.Room
 import android.content.Context
-import android.util.Log
-import br.com.bancopanchallenge.model.Game
 import br.com.bancopanchallenge.model.room.GameDatabase
-import br.com.bancopanchallenge.model.room.RoomRepository
+import android.net.ConnectivityManager
+
+
 
 class BancoPANApplication : Application() {
 
     companion object {
         var database: GameDatabase? = null
+        lateinit var instance: BancoPANApplication
+
+        fun getAppContext(): Context = instance.applicationContext
+
+        fun isInternetOn(): Boolean {
+
+            val cm = getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            return cm.activeNetworkInfo != null && cm.activeNetworkInfo.isConnected
+
+        }
     }
 
-    private lateinit var instance: BancoPANApplication
 
     fun getInstance(): BancoPANApplication? {
         return instance
     }
-
-    fun getAppContext(): Context = instance.applicationContext
 
 
     override fun onCreate() {
