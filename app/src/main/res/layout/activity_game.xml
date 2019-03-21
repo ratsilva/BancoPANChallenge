@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <data>
+            <variable
+                name="viewModel"
+                type="br.com.bancopanchallenge.viewmodel.GameViewModel"/>
+        </data>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                    android:id="@+id/activitygame_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:hint="Super Mario Bros"
+                    android:text="@{viewModel.name}"/>
+
+            <ImageView
+                    android:id="@+id/activitygame_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintTop_toBottomOf="@id/activitygame_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:src="@drawable/ic_arrow_upward"/>
+
+            <TextView
+                    android:id="@+id/activitygame_lbl_canais"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:text="Canais:"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activitygame_image"/>
+
+            <TextView
+                    android:id="@+id/activitygame_canais"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="normal"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16dp"
+                    android:hint="1000"
+                    android:text="@{viewModel.channels}"
+                    app:layout_constraintTop_toTopOf="@id/activitygame_lbl_canais"
+                    app:layout_constraintStart_toEndOf="@id/activitygame_lbl_canais"/>
+
+            <TextView
+                    android:id="@+id/activitygame_lbl_visualizacoes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:text="Visualizações:"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activitygame_lbl_canais"/>
+
+            <TextView
+                    android:id="@+id/activitygame_visualizacoes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="normal"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16dp"
+                    android:hint="1000"
+                    android:text="@{viewModel.viewers}"
+                    app:layout_constraintTop_toTopOf="@id/activitygame_lbl_visualizacoes"
+                    app:layout_constraintStart_toEndOf="@id/activitygame_lbl_visualizacoes"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
