@@ -32,11 +32,11 @@ public class RetrofitRepository {
         return statusAPI;
     }
 
-    public void getAllGames(int offset){
+    public void getAllGames(final int offset){
 
         statusAPI.postValue(Status.LOADING);
 
-        Call<ResponseGson> listGames = gameService.getTopGames(CLIENTE_ID, String.valueOf(offset));
+        Call<ResponseGson> listGames = gameService.getTopGames(CLIENTE_ID, offset);
 
         listGames.enqueue(new Callback<ResponseGson>() {
 
@@ -50,7 +50,7 @@ public class RetrofitRepository {
                 List<ResponseGson.Top> listTop = gameGson.getTop();
 
                 for(ResponseGson.Top rp : listTop){
-                    game = new Game(rp.getViewers(), rp.getChannels(), rp.getGame().getLocalized_name(), rp.getGame().getBox().get("large"));
+                    game = new Game(rp.getViewers(), rp.getChannels(), rp.getGame().getLocalized_name(), rp.getGame().getBox().get("large"), offset);
                     listGames.add(game);
                 }
 

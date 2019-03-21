@@ -31,10 +31,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                <ProgressBar
-                        android:id="@+id/allgames_progressbar"
+                <TextView
+                        android:id="@+id/allgames_emptytext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@string/no_results"
                         android:visibility="gone"/>
 
             </LinearLayout>

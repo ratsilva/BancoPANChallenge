@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BancoPANChallenge</string>
+    <string name="no_results">No results 😓</string>
 </resources>

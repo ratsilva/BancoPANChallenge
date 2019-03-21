@@ -3,27 +3,26 @@ package br.com.bancopanchallenge.view.activity
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.bancopanchallenge.R
 import br.com.bancopanchallenge.databinding.ActivityAllGamesBinding
-import br.com.bancopanchallenge.model.Game
-import br.com.bancopanchallenge.model.retrofit.Status
 import br.com.bancopanchallenge.view.adapter.AllGamesAdapter
-import br.com.bancopanchallenge.viewmodel.AllGamesViewModel
-import br.com.bancopanchallenge.view.custom.EndlessRecyclerOnScrollListener
 import androidx.recyclerview.widget.RecyclerView
+import br.com.bancopanchallenge.model.Game
+import br.com.bancopanchallenge.viewmodel.AllGamesViewModel
 
 class AllGamesActivity : AppCompatActivity() {
 
     private lateinit var viewModel: AllGamesViewModel
     private lateinit var binding: ActivityAllGamesBinding
 
-    private val adapter = AllGamesAdapter(mutableListOf())
+    private val adapter = AllGamesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,17 +49,14 @@ class AllGamesActivity : AppCompatActivity() {
         // Configure Observable fields from ViewModel
         configureObservableFields()
 
-        // Get data (Games) from ViewModel
-        viewModel.getAllGamesAPI()
-
 
     }
 
     fun configureSwipeLayout() {
 
         binding.allgamesSwipelayout.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
-            adapter.clearGames()
-            viewModel.getAllGamesAPI()
+            viewModel.refreshAllGames()
+            binding.allgamesSwipelayout.isRefreshing = false
         })
 
     }
@@ -70,14 +66,11 @@ class AllGamesActivity : AppCompatActivity() {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.orientation = RecyclerView.VERTICAL
 
+        val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+
         binding.allgamesRecyclerview.layoutManager = gridLayoutManager
         binding.allgamesRecyclerview.adapter = adapter
-
-        binding.allgamesRecyclerview.addOnScrollListener(object : EndlessRecyclerOnScrollListener() {
-            override fun onLoadMore() {
-                viewModel.getNextGamesAPI()
-            }
-        });
+        binding.allgamesRecyclerview.addItemDecoration(decoration)
 
     }
 
@@ -91,31 +84,8 @@ class AllGamesActivity : AppCompatActivity() {
 
     fun configureObservableFields(){
 
-        viewModel.getAllGames().observe(this, Observer<List<Game>> { games ->
-            adapter.updateGames(games)
-            binding.allgamesSwipelayout.isRefreshing = false
-        })
-
-        viewModel.getStatusAPI().observe(this, Observer<Status> { status ->
-
-            when(status){
-
-                Status.LOADING -> {
-                    binding.allgamesProgressbar.visibility = View.VISIBLE
-                }
-                Status.SUCCESS -> {
-                    binding.allgamesProgressbar.visibility = View.GONE
-                }
-                Status.FAIL -> {
-                    binding.allgamesProgressbar.visibility = View.GONE
-                    //SHOW ERROR MESSAGE
-                }
-                else -> {
-                    binding.allgamesProgressbar.visibility = View.GONE
-                }
-
-            }
-
+        viewModel.getAllGames().observe(this, Observer<PagedList<Game>> { pagedList ->
+            adapter.submitList(pagedList)
         })
 
     }

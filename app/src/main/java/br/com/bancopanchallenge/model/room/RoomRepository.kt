@@ -2,6 +2,7 @@ package br.com.bancopanchallenge.model.room
 
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import br.com.bancopanchallenge.app.BancoPANApplication
 import br.com.bancopanchallenge.model.Game
 import br.com.bancopanchallenge.model.GameRepository
@@ -14,8 +15,12 @@ class RoomRepository : GameRepository{
     return gameDao.getGame(name)
   }
 
-  override fun getAllGames(): LiveData<List<Game>> {
+  override fun getAllGames(): DataSource.Factory<Int, Game> {
     return gameDao.getAllGames()
+  }
+
+  override fun getQtdGames(): Int {
+    return gameDao.getQtdGames()
   }
 
   override fun insertAllGames(listGames: List<Game>) {

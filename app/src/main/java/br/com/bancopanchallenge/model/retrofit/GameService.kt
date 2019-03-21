@@ -8,6 +8,6 @@ public interface GameService{
 
     @GET("games/top")
     fun getTopGames(@Query("client_id") clientId: String,
-                    @Query("offset") offset: String? = null): Call<ResponseGson>
+                    @Query("offset") offset: Int): Call<ResponseGson>
 
 }

@@ -1,6 +1,7 @@
 package br.com.bancopanchallenge.model.room
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 import br.com.bancopanchallenge.model.Game
 
@@ -13,10 +14,13 @@ interface GameDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllGames(gameList: List<Game>)
 
-    @Query("SELECT * FROM Games ORDER BY viewers ASC")
-    fun getAllGames(): LiveData<List<Game>>
+    @Query("SELECT * FROM Games ORDER BY `offset` ASC")
+    fun getAllGames(): DataSource.Factory<Int, Game>
 
-    @Query("SELECT * FROM Games WHERE name = :nameGame")
+    @Query("SELECT * FROM Games WHERE name = (:nameGame)")
     fun getGame(nameGame: String): LiveData<Game>
+
+    @Query("SELECT Count(name) FROM Games")
+    fun getQtdGames(): Int
 
 }

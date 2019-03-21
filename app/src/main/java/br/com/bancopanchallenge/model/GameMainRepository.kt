@@ -19,9 +19,15 @@ class GameMainRepository {
         return roomRepository.getGame(name)
     }
 
+    fun getQtdGames(): Int{
+        return roomRepository.getQtdGames()
+    }
+
+    /*
     fun getAllGamesDB(): LiveData<List<Game>> {
         return roomRepository.getAllGames()
     }
+    */
 
     fun getStatusAPI(): LiveData<Status> {
         return retrofitRepository.statusAPI

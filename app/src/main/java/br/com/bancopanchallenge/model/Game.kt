@@ -14,6 +14,7 @@ data class Game(
 
     @PrimaryKey @NonNull var name: String,
 
-    var logo: String = ""
+    var logo: String = "",
 
+    var offset: Int = 0
 )
