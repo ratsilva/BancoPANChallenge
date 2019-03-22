@@ -11,13 +11,10 @@ class GameViewModel : ViewModel() {
     var viewers = ObservableInt(0)
     var channels = ObservableInt(0)
 
-
     fun fetchGame(game: Game) {
-
         this.name.set(game.name)
         this.viewers.set(game.viewers)
         this.channels.set(game.channels)
-
     }
 
 }
